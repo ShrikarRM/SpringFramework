@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation=" http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+
+<bean class="com.account.virus.Virus" id="virus" lazy-init="true"></bean>
+<bean class="java.lang.String" id="string"></bean>
+<bean class="java.util.ArrayList" id="arrayList"></bean>
+<bean class="java.lang.reflect.Array" id="array"></bean>
+<bean class="java.lang.Error" id="eror"></bean>
+<bean class="java.lang.Exception" id="exception"></bean>
+<bean class="java.util.logging.FileHandler" id="filehandler"></bean>
+<bean class="java.awt.Label" id="label"></bean>
+<bean class="java.awt.List" id="list"></bean>
+<bean class="java.lang.reflect.Modifier" id="modifier"></bean>
+<bean class="java.lang.Object" id="object"></bean>
+<bean class="java.util.Stack" id="stack"></bean>
+
+</beans>
