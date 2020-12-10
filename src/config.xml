@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation=" http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+<bean class="com.account.task.Power" id="power">
+<property name="available" value="true"></property>
+
+</bean>
+
+<bean class="com.account.task.Internet" id="internetProvider">
+<property name="providerName" value="Airtel"></property>
+<property name="state" value="kerala"></property>
+<property name="code" value="345"></property>
+<constructor-arg ref="power"></constructor-arg>  
+ </bean>
+
+<bean class="com.account.task.Browser" id="browser">
+<property name="internet" ref="internetProvider"></property>
+<property name="power" ref="power"></property>
+
+</bean>
+</beans>
