@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation=" http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="bus" class="com.account.bus.Bus" autowire="byName">
+		<property name="name" value="vrl"></property>
+		<property name="fare" value="25"></property>
+		<property name="noOfPassengers" value="58"></property>
+<!--  		<property name="passenger" ref="passenger"></property>
+ --> 	</bean>
+
+	<bean id="pass" class="com.account.bus.Passenger">
+	<!-- this will throw nulexpn id must br same as of ref dependent class given in parent class-->
+	<property name="name" value="XYZ"></property>
+	<property name="seatNo" value="4"></property>
+</bean>
+
+<!-- <bean id="pass" class="com.account.bus.Passenger">
+	<property name="name" value="XYZ"></property>
+	<property name="seatNo" value="4"></property>
+</bean> -->
+
+</beans>
