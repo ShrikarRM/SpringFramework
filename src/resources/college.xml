@@ -18,5 +18,10 @@
 		<property name="name" value="Suresh"></property>
 		<property name="rollNum" value="4"></property>
 	</bean>
+	<bean id="st" class="com.account.college.Student">
+		 <property name="id" value="S12"></property>
+		<property name="name" value="Subhash"></property>
+		<property name="rollNum" value="54"></property> 
+	</bean>
  
 </beans>
