@@ -14,7 +14,6 @@ public class College {
 		super();
 		this.name = name;
 		this.noOfFaculty = noOfFaculty;
-		this.stu.setName("sagar");
 	}
 
 	public String getAddress() {
