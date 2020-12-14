@@ -17,6 +17,11 @@ public class CoronaVaccineDAO {
 	private SessionFactory sessionFactory;
 
 	private Session session;
+	
+	public CoronaVaccineDAO(SessionFactory sessionFactory) {
+		super();
+		this.sessionFactory = sessionFactory;
+	}
 
 	public void save(CoronaVaccineDTO dto) {
 		Session session = null;
