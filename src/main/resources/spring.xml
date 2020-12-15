@@ -6,25 +6,33 @@
 	http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-<bean id="coronaVaccineDAO" class="com.account.integration.DAO.CoronaVaccineDAO">
-<constructor-arg ref="lsfb"></constructor-arg>
+ 	<import resource="datasource.xml" /> 
+ 
+ <bean id="propConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+<property name="locations" value="prop.properties"></property>
 </bean>
+	<bean id="coronaVaccineDAO" class="com.account.integration.DAO.CoronaVaccineDAO">
+		<constructor-arg ref="lsfb"></constructor-arg>
+	</bean>
+	
 	<bean id="lsfb"
 		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.show_sql">true</prop>
-				<prop key="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+
+	 			<!-- <prop key="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</prop>
 				<prop key="hibernate.connection.url">jdbc:mysql://localhost:3306/spring</prop>
 				<prop key="hibernate.connection.username">root</prop>
 				<prop key="hibernate.connection.password">root</prop>
-				<prop key="hibernate.hbm2ddl.auto">update</prop>
-			</props>
+	 		 --></props>
 		</property>
 		<property name="annotatedClasses">
 			<list>
 				<value>com.account.integration.DTO.CoronaVaccineDTO</value>
 			</list>
 		</property>
-	</bean>
+		<property name="dataSource" ref="driverManagerDataSource"></property>
+ 	</bean>
 </beans>
