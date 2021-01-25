@@ -7,7 +7,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.log4j.Logger;
 import org.hibernate.annotations.GenericGenerator;
+
+import com.account.module.service.RegisterServiceImpl;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -36,8 +39,10 @@ public class RegisterDTO {
 	@Column(name = "reg_confirmPassword")
 	private String confirmPassword;
 	
+	static Logger logger = Logger.getLogger(RegisterDTO.class);
+
 	public RegisterDTO() {
-System.out.println(this.getClass().getSimpleName()+" created");
+logger.info(this.getClass().getSimpleName()+" created");
 	}
 
 	@Override

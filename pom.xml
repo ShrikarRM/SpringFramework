@@ -20,6 +20,9 @@
 		<mail.api.version>1.5.5</mail.api.version>
 		<mail.version>1.4.7</mail.version>
 		<log4j.version>1.2.17</log4j.version>
+		<apache.commons.version>3.11</apache.commons.version>
+				<servlet.version>3.0-alpha-1</servlet.version>
+		
 	
 	</properties>
 	<dependencies>
@@ -28,6 +31,11 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>${jstl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>${servlet.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -91,6 +99,13 @@
 			<artifactId>log4j</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-lang3</artifactId>
+    <version>${apache.commons.version}</version>
+</dependency>
+		
 	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>

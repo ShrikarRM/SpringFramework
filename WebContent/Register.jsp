@@ -10,12 +10,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="validate.js"></script>
-
+ <script type="text/javascript" src="validate-register.js"></script>
+ 
 <title>Registration details</title>
 </head>
 <body>
@@ -33,9 +29,8 @@
 	</nav>
 
 	<div class="container">
-		<form name="module" action="register.do" onsubmit="return validate()"
-			method="post">
-			<p class="text-danger text-center font-weight-bold">${save_detail}</p>
+		<form name="module" action="register.do" method="post" onsubmit="return validate()">
+			<p class="text-danger text-center font-weight-bold">${save_err}</p>
 			<p class="text-danger text-center font-weight-bold">${save}</p>
 			
 			<p class="text-danger text-center font-weight-bold">${success}</p>
@@ -47,8 +42,8 @@
 				</div>
 				<div class="col-sm-6">
 					<input type="text" class="form-control mt-3"
-						placeholder="Enter First Name" name="firstName"> <span
-						id="err_fname" class="text-danger" text-weight="bold"></span>
+						placeholder="Enter First Name" name="firstName">
+						 <span id="err_fname" class="text-danger" text-weight="bold"></span>
 				</div>
 			</div>
 
@@ -58,8 +53,8 @@
 				</div>
 				<div class="col-sm-6">
 					<input type="text" class="form-control mt-3"
-						placeholder="Enter Last Name" name="lastName"> <span
-						id="err_lname" class="text-danger"></span>
+						placeholder="Enter Last Name" name="lastName">
+						<span id="err_lname" class="text-danger"></span>
 				</div>
 			</div>
 
@@ -95,19 +90,14 @@
 					<input type="password" class="form-control mt-3"
 						placeholder="Re-Enter the password" name="confirmPassword">
 					<span id="err_match" class="text-danger" text-weight="bold"></span>
-
 				</div>
-
 			</div>
-
-			<button type="submit" class="btn btn-primary mt-3" name="register">Register</button>
-
+			<button type="submit" class="btn btn-success mt-3" name="register">Register</button>
+			<button type="reset" class="btn btn-danger mt-3" name="cancel-register">Cancel</button>
 		</form>
-
 	</div>
 	<nav
 		class="navbar fixed-bottom navbar-dark bg-primary justify-content-center">
 	<a class="navbar-brand" href="#"> &copy x-workz.in 2021</a> </nav>
-
 </body>
 </html>

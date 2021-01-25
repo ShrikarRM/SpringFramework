@@ -9,8 +9,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<script type="text/javascript" src="validate-login.js"></script>	
-<title>Login details</title>
+	<script type="text/javascript" src="validate-login.js">
+	
+</script>
+	
+<title>Forget password details</title>
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -21,49 +24,50 @@
 		</div>
 		<ul class="nav justify-content-end">
 			<li class="nav-item"><a class="navbar-brand mb-0 h1"
-				href="Register.jsp">Register</a></li>
+				 href="Login.jsp">Login</a></li>
 		</ul>
 	</div>
 	</nav>
 	<div class="container">
-		<form name="login" action="login.do" method="post" onsubmit="return validateLogin()">
-<%-- 			<p class="text-success text-right font-weight-bold">${name}</p>
- --%>			
- <p class="text-danger text-center font-weight-bold">${login}</p>
- 		<p class="text-success text-center font-weight-bold">${resetPass}</p>
-
+		<form name="ForgotPassword" action="updatePassword.do" method="post"
+			onsubmit="return validateForgotPassword()">
+			 	<p class="text-danger text-center font-weight-bold">${resetPass}</p>
 
 			<div class="row">
 				<div class="col-sm-3 mt-3">
-					<label for="email">Email:</label>
-				</div>
-				<div class="col-sm-6">
-					<input type="text" class="form-control mt-3"
-						placeholder="Enter your email" name="email"> <span
-						id="err_email" class="text-danger"></span>
-
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-sm-3 mt-3">
-					<label for="">Password:</label>
+					<label for="email">Temporary Password:</label>
 				</div>
 				<div class="col-sm-6">
 					<input type="password" class="form-control mt-3"
-						placeholder="Enter your password" name="password"> <span
-						id="err_password" class="text-danger"></span>
+						placeholder="Enter Temporary Password" name="tempPassword">
+						 <span id="err_tempPassword" class="text-danger"></span>
 				</div>
 			</div>
 
 			<div class="row">
-				<div class="col-sm-12 mt-3">
-					<button type="submit" class="btn btn-primary ml-auto" name="login">Login</button>
-					<button type="reset" class="btn btn-primary ml-auto" name="cancel-login">Reset</button>
-					
-							<a href="Reset.jsp">Forgot Password</a>
+				<div class="col-sm-3 mt-3">
+					<label for="email">New Password:</label>
+				</div>
+				<div class="col-sm-6">
+					<input type="password" class="form-control mt-3"
+						placeholder="Enter new Password" name="newPassword">
+						 <span id="err_newPassword" class="text-danger"></span>
 				</div>
 			</div>
+			
+			<div class="row">
+				<div class="col-sm-3 mt-3">
+					<label for="email">Confirm new Password:</label>
+				</div>
+				<div class="col-sm-6">
+					<input type="password" class="form-control mt-3"
+						placeholder="Re-Enter your new Password" name="confirmPassword">
+						 <span id="err_confirmPassword" class="text-danger"></span>
+				</div>
+			</div>
+				<button type="submit" class="btn btn-primary mt-3" name="reset">Reset</button>
+				<button type="reset" class="btn btn-primary mt-3" name="cancel-resetting">ClearAll</button>
+
 		</form>
 	</div>
 	<nav class="navbar fixed-bottom navbar-dark bg-primary justify-content-center">

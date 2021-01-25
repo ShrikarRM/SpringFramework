@@ -9,8 +9,8 @@
 <import resource="datasource.xml" />
 	<context:component-scan base-package="com.account"></context:component-scan>
 <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="username" value="enter sender mail ID"></property>
-		<property name="password" value="enter ur mailId's password"></property>
+		<property name="username" value="..."></property>
+		<property name="password" value="..."></property>
 		<property name="port" value="587"></property>
 		<property name="host" value="smtp.gmail.com"></property>
 		<property name="javaMailProperties">
@@ -34,7 +34,8 @@
 			<props>
 				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
-				</props>
+
+					</props>
 		</property>
 		<property name="annotatedClasses">
 			<list>
