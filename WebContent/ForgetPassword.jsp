@@ -31,7 +31,7 @@
 	<div class="container">
 		<form name="ForgotPassword" action="updatePassword.do" method="post"
 			onsubmit="return validateForgotPassword()">
-			 	<p class="text-danger text-center font-weight-bold">${resetPass}</p>
+			 	<p class="text-danger text-center font-weight-bold">${OTP}</p>
 
 			<div class="row">
 				<div class="col-sm-3 mt-3">

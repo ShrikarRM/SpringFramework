@@ -12,14 +12,21 @@ public interface RegisterDAO {
 
 	public long fetchEmailCount(RegisterDTO dto) throws RepositoryException;
 
-	public List<RegisterDTO> fetchDetailsforLogin(RegisterDTO dto) throws RepositoryException;
+	public List<RegisterDTO> fetchDetailsforLogin(String email) throws RepositoryException;
 
 	public String updateNewPassword(RegisterDTO dto) throws RepositoryException;
 
 	public boolean fetchPasswordCountForUpdate(ResetDTO dto) throws RepositoryException;
 
 	public String updateNewPassword(ResetDTO resetDTO) throws RepositoryException;
-	
-	//public RegisterDTO getUserByEmail(String email);
+
+	// public RegisterDTO getUserByEmail(String email);
+	public int updateLoginFailedCount(String email,long count) throws RepositoryException;
+
+	public boolean updateLoginaccountStatus(String email,boolean status) throws RepositoryException;
+
+	//public int updateCountOnCorrectLogin(String email,boolean status) throws RepositoryException;
+
+	//public boolean updateAccountStatusToLocked(LoginDTO loginDTO) throws RepositoryException;
 
 }

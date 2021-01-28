@@ -81,7 +81,7 @@ public class RegistrationController {
 				if(dto.equals("SUCCESS")){
 					model.addAttribute("login", "Login success");
 					logger.debug("Passwords matching, Login suceesful");
-					model.addAttribute("name","'Hi '+registerDTO.getFirstName()");
+					model.addAttribute("name",registerDTO.getFirstName());
 					return "Home";
 				}
 			}
@@ -90,13 +90,23 @@ public class RegistrationController {
 				logger.debug("Email/Password are incorrect, Login failed");
 				return "Login";
 			}
+			
 		
 			if(dto.equals("not Registered")) {
 				model.addAttribute("login", "Login failed,Please register with us");
 				logger.debug("Please register with us");
 				return "Login";
 			}
-			
+			if(dto.equals("Maximum wrong attempts")){
+				model.addAttribute("login", "you reached maximum wrong attempts ");
+				logger.debug("user reached maximum wrong attempts");
+				return "Login";
+			}
+			if(dto.equals("locked")){
+				model.addAttribute("login", "your account Locked");
+				logger.debug("user account has been Locked");
+				return "Login";
+			}
 		} catch (ServiceException e) {
 			throw new ControllerException(e.getMessage());
 		} catch (Exception e) {
@@ -126,11 +136,12 @@ public class RegistrationController {
 			String otp = service.validateAndResetPassword(rdto );
 			
 			if (otp.equals("SUCCESS")) {
+				model.addAttribute("OTP", "Please enter the OTP you received on registered email");
 				logger.debug("OTP mail sent to the registered email");
 				return "ForgetPassword";
-			} else
-			{
-				model.addAttribute("sendOTP", "Please enter your valid registered email");
+			}
+			if (otp.equals("Fail")) {
+				model.addAttribute("OTP", "Please enter your valid registered email to receive OTP");
 				logger.debug("OTP mail not sent");
 				return "Reset";
 			}
@@ -141,7 +152,7 @@ public class RegistrationController {
 		catch (Exception e) {
 			throw new ControllerException(e.getMessage());
 		}
-		//return "Reset";
+		return "Reset";
 	}
 	@RequestMapping(value = "/updatePassword.do", method = RequestMethod.POST)
 	public String onResetPassword(ResetDTO resetDTO,Model model) throws ControllerException {

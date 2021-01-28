@@ -10,17 +10,13 @@ import javax.persistence.Transient;
 import org.apache.log4j.Logger;
 import org.hibernate.annotations.GenericGenerator;
 
-import com.account.module.service.RegisterServiceImpl;
-
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
-@ToString
 @Getter
 @Setter
-@Table(name = "register_module")
+@Table(name = "common_module_table")
 public class RegisterDTO {
 	@GenericGenerator(name = "ref", strategy = "increment")
 	@GeneratedValue(generator = "ref")
@@ -35,6 +31,11 @@ public class RegisterDTO {
 	private String email;
 	@Column(name = "reg_password")
 	private String password;
+	@Column(name="fail_count")
+	private long failCount;
+	@Column(name="account_status")
+	private boolean status;
+	
 	@Transient
 	@Column(name = "reg_confirmPassword")
 	private String confirmPassword;
@@ -73,8 +74,7 @@ logger.info(this.getClass().getSimpleName()+" created");
 	@Override
 	public String toString() {
 		return "RegisterDTO [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-				+ ", password=" + password + ", confirmPassword=" + confirmPassword + "]";
+				+ ", password=" + password + ", failCount=" + failCount + ", status=" + status + ", confirmPassword="
+				+ confirmPassword + "]";
 	}
-	
-	
 }

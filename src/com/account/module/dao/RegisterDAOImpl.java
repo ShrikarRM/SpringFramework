@@ -55,27 +55,6 @@ public class RegisterDAOImpl implements RegisterDAO {
 		return (long) serializable;
 	}
 
-	/*@Override
-	public long fetchEmailCount(RegisterDTO dto) throws RepositoryException {
-		Session session = null;
-		long emailCount = 0;
-		try {
-			session = sessionFactory.openSession();
-			Query query = session.createQuery("select count(*) from RegisterDTO where email=:noe");
-			query.setParameter("noe", );
-			emailCount = (Long) query.uniqueResult();
-			logger.info(emailCount);
-
-		} catch (HibernateException e) {
-			throw new RepositoryException(e.getMessage());
-		}catch (Exception e) {
-			throw new RepositoryException(e.getMessage());
-		} finally {
-			if (session != null)
-				session.close();
-		}
-		return emailCount;
-	}*/
 	
 	@Override
 	public long fetchEmailCount(RegisterDTO dto) throws RepositoryException {
@@ -100,7 +79,7 @@ public class RegisterDAOImpl implements RegisterDAO {
 	}
 	
 	@Override
-	public List<RegisterDTO> fetchDetailsforLogin(RegisterDTO dto) throws RepositoryException {
+	public List<RegisterDTO> fetchDetailsforLogin(String email) throws RepositoryException {
 		Session session = null;
 		List<RegisterDTO> registerDTO=null;
 		
@@ -108,7 +87,7 @@ public class RegisterDAOImpl implements RegisterDAO {
 			session = sessionFactory.openSession();
 			
 			Query query = session.createQuery("select reg from RegisterDTO reg where reg.email=:ml");
-			query.setParameter("ml",dto.getEmail());
+			query.setParameter("ml",email);
 			registerDTO=(List<RegisterDTO>) query.list();
 			for (RegisterDTO registerDTO2 : registerDTO) {
 				logger.debug(registerDTO2);
@@ -127,6 +106,7 @@ public class RegisterDAOImpl implements RegisterDAO {
 
 	@Override
 	public String updateNewPassword(RegisterDTO dto) throws RepositoryException {
+		//updating OTP as password for time being
 		Session session = null;
 		Transaction transaction = null;
 		String tempPassword=null;
@@ -160,7 +140,8 @@ public class RegisterDAOImpl implements RegisterDAO {
 
 	@Override
 	public boolean fetchPasswordCountForUpdate(ResetDTO resetDTO) throws RepositoryException{
-	Session session = null;
+	//checking the OTP entered in resetPage & the one in DB
+		Session session = null;
 	long count=0;
 		try {
 			session = sessionFactory.openSession();
@@ -183,9 +164,11 @@ public class RegisterDAOImpl implements RegisterDAO {
 
 	@Override
 	public String updateNewPassword(ResetDTO resetDTO) throws RepositoryException {
+		//updating new password after replacing OTP
 		Session session = null;
 		Transaction transaction = null;
 		String newPassword = null;
+		int check=0;
 		try {
 			session = sessionFactory.openSession();
 			transaction = session.beginTransaction();
@@ -193,6 +176,70 @@ public class RegisterDAOImpl implements RegisterDAO {
 			query.setParameter("pwd", resetDTO.getTempPassword());
 			query.setParameter("npwd",resetDTO.getNewPassword());
 			query.executeUpdate();
+			logger.debug(check);
+			transaction.commit();
+		} catch (HibernateException e) {
+			if (transaction != null) {
+				transaction.rollback();
+				throw new RepositoryException(e.getMessage());
+			}
+		} catch (Exception e) {
+			if (transaction != null)
+				transaction.rollback();
+			throw new RepositoryException(e.getMessage());
+		} finally {
+			if (session != null)
+				session.close();
+		}		
+		return newPassword;
+	}
+
+
+	@Override
+	public int updateLoginFailedCount(String email,long failCount) throws RepositoryException {
+		Session session = null;
+		Transaction transaction = null;
+		int check=0;
+		try {
+			session = sessionFactory.openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("update RegisterDTO reg set reg.failCount=:ct where reg.email=:ml");
+			query.setParameter("ct",failCount);
+			query.setParameter("ml",email);
+			check=query.executeUpdate();
+			logger.debug(check);
+			transaction.commit();
+		} catch (HibernateException e) {
+			if (transaction != null) {
+				transaction.rollback();
+				throw new RepositoryException(e.getMessage());
+			}
+		} catch (Exception e) {
+			if (transaction != null)
+				transaction.rollback();
+			throw new RepositoryException(e.getMessage());
+		} finally {
+			if (session != null)
+				session.close();
+		}		
+		return 3;
+	}
+
+
+	@Override
+	public boolean updateLoginaccountStatus(String email,boolean status) throws RepositoryException {
+		//
+		Session session = null;
+		Transaction transaction = null;
+		int check=0;
+		try {
+			session = sessionFactory.openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("update RegisterDTO reg set reg.status=:sts where reg.email=:ml");
+			query.setParameter("sts", status);
+			query.setParameter("ml", email);
+			check=query.executeUpdate();
+			logger.debug(check);
 			transaction.commit();
 		} catch (HibernateException e) {
 			if (transaction != null) {
@@ -207,9 +254,70 @@ public class RegisterDAOImpl implements RegisterDAO {
 			if (session != null)
 				session.close();
 		}
-		
-		return newPassword;
+		return false;
 	}
+
+
+	/*@Override
+	public int updateCountOnCorrectLogin(String email) throws RepositoryException {
+		Session session = null;
+		Transaction transaction = null;
+		int check=0;
+		try {
+			session = sessionFactory.openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("update RegisterDTO reg set reg.count=ct where reg.email=:ml");
+			query.setParameter("ml", email);
+			check=query.executeUpdate();
+			logger.debug(check);
+			transaction.commit();
+		} catch (HibernateException e) {
+			if (transaction != null) {
+				transaction.rollback();
+				throw new RepositoryException(e.getMessage());
+			}
+		} catch (Exception e) {
+			if (transaction != null)
+				transaction.rollback();
+			throw new RepositoryException(e.getMessage());
+		} finally {
+			if (session != null)
+				session.close();
+		}
+		return 0;
+	}*/
+
+
+/*	@Override
+	public boolean updateAccountStatusToLocked(LoginDTO loginDTO) throws RepositoryException {
+		Session session = null;
+		Transaction transaction = null;
+		int check = 0;
+		try {
+			session = sessionFactory.openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("update RegisterDTO reg set reg.status=:sts where reg.email=:ml");
+			query.setParameter("sts", true);
+			query.setParameter("ml", loginDTO.getEmail());
+			check = query.executeUpdate();
+			transaction.commit();
+			logger.debug(check);
+		} catch (HibernateException e) {
+			if (transaction != null) {
+				transaction.rollback();
+				throw new RepositoryException(e.getMessage());
+			}
+		} catch (Exception e) {
+			if (transaction != null)
+				transaction.rollback();
+			throw new RepositoryException(e.getMessage());
+		} finally {
+			if (session != null)
+				session.close();
+		}
+
+		return false;
+	}*/
 
 	/*@Override
 	public RegisterDTO getUserByEmail(String email) {

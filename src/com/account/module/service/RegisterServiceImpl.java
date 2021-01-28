@@ -26,7 +26,6 @@ public class RegisterServiceImpl implements RegisterService {
 	private SendEmailForOTP emailForOTP;
 	static Logger logger = Logger.getLogger(RegisterServiceImpl.class);
 
-	
 	public RegisterServiceImpl() {
 
 		logger.info("invoked service method");
@@ -98,76 +97,100 @@ public class RegisterServiceImpl implements RegisterService {
 				}
 
 				if (valid) {
-					if (dao.fetchEmailCount(dto)>1) {
+					if (dao.fetchEmailCount(dto) > 1) {
 						message = "DUPLICATE";
 						logger.debug("Email id is already exist");
 					} else {
-						
-						boolean sentMail=sendEmail.sendMail(dto);
-						if(sentMail){
-						long pk = dao.save(dto);
-						message = "SAVED";
-						logger.debug("Data is valid data saved to DB");
-						logger.debug("Data is saved to DB with id=" + pk);
-						}else{
+
+						boolean sentMail = sendEmail.sendMail(dto);
+						if (sentMail) {
+							long pk = dao.save(dto);
+							message = "SAVED";
+							logger.debug("Data is valid data saved to DB");
+							logger.debug("Data is saved to DB with id=" + pk);
+						} else {
 							logger.debug("Email not sent, Data not saved");
 						}
 					}
-					
+
 				} else {
 					logger.debug("Data is invalid it can't be saved to DB");
 				}
 			}
 		} catch (RepositoryException e) {
 			throw new ServiceException("Exception in service " + e.getMessage());
-		}catch (Exception e) {
+		} catch (Exception e) {
 			throw new ServiceException("Exception in service " + e.getMessage());
 		}
 		return message;
 	}
-	
+
 	@Override
 	public List<RegisterDTO> loginDetails(RegisterDTO dto) throws ServiceException {
-		List<RegisterDTO> regDTO=null;
+		List<RegisterDTO> regDTO = null;
 		try {
-			regDTO=dao.fetchDetailsforLogin(dto);
+			regDTO = dao.fetchDetailsforLogin(dto.getEmail());
 		} catch (RepositoryException e) {
 			throw new ServiceException("Exception in service " + e.getMessage());
-		}catch (Exception e) {
+		} catch (Exception e) {
 			throw new ServiceException("Exception in service " + e.getMessage());
 		}
 		return regDTO;
 	}
-	
-	
+
 	@Override
-	public String validateAndLogin(RegisterDTO dto,LoginDTO loginDTO) throws ServiceException {
-		String message="NA";
+	public String validateAndLogin(RegisterDTO dto, LoginDTO loginDTO) throws ServiceException {
+		String message = "NA";
 		List<RegisterDTO> registerDTO = null;
-		
+		int successCount;
+		boolean accountStatus;
+		long failedCount = 0;
+
 		logger.info("invoked validateAndLogin() in serviceImpl");
 		try {
 			if (Objects.nonNull(dto)) {
-					registerDTO = dao.fetchDetailsforLogin(dto);
-					if (registerDTO.size() == 1) {
+				registerDTO = dao.fetchDetailsforLogin(loginDTO.getEmail());
+				for (RegisterDTO registerDTO1 : registerDTO) {
+					accountStatus = registerDTO1.isStatus();
+					logger.info("Account lock status " + accountStatus);
+					if (accountStatus == false) {
+						if (registerDTO.size() == 1) {
 
-					for (RegisterDTO registerDTO1 : registerDTO) {
-						if (registerDTO1.getPassword().equals(loginDTO.getPassword())) {
-							message = "SUCCESS";
-							logger.debug("Login successfully");
+							if (registerDTO1.getPassword().equals(loginDTO.getPassword())) {
+								message = "SUCCESS";
+								logger.debug("Login successfully");
+								successCount = dao.updateLoginFailedCount(loginDTO.getEmail(), 0);
+								logger.debug("count reset to " + successCount);
+							} else {
+								failedCount = registerDTO1.getFailCount();
+								//failedCount++;
+								logger.debug("Error message..... " + failedCount);
+								if (failedCount < 3) {
+									dao.updateLoginFailedCount(loginDTO.getEmail(),++failedCount);
+									logger.debug("Error message..... " + failedCount);
+									message = "FAIL";
+									logger.debug("Password mismatching, Login Failed");
+								}
+								else {
+									accountStatus = dao.updateLoginaccountStatus(loginDTO.getEmail(), true);
+									message = "Maximum wrong attempts";
+									logger.debug(
+											accountStatus + " user reached maximum wrong attempts, account is blocked");
+								}
+								logger.debug(registerDTO1);
+							}
 						} else {
-							message = "FAIL";
-							logger.debug("Password mismatching, Login Failed");
-							logger.debug(registerDTO1);
+							message = "not Registered";
+							logger.debug(" Login Failed,Please register with us before logging");
 						}
 					}
-				}else{
-					message="not Registered";
-					logger.debug(" Login Failed,Please register with us before logging");
+					if (accountStatus == true) {
+						logger.info("Account Locked");
+						message = "locked";
+					}
 				}
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new ServiceException("Exception in service " + e.getMessage());
 		}
 		return message;
@@ -175,23 +198,25 @@ public class RegisterServiceImpl implements RegisterService {
 
 	@Override
 	public String validateAndResetPassword(RegisterDTO dto) throws ServiceException {
-		String tempPasswords=null;
-		String message="NA";
-		boolean temp=false;
+		String tempPasswords = null;
+		String message = "NA";
+		boolean temp = false;
 		logger.debug("invoked validateAndResetPassword() ");
 		try {
-			long passwordCount=dao.fetchEmailCount(dto);
+			long passwordCount = dao.fetchEmailCount(dto);
 			logger.debug(passwordCount);
-		if(passwordCount==1){
+			if (passwordCount == 1) {
 				tempPasswords = dao.updateNewPassword(dto);
-				List<RegisterDTO> list=dao.fetchDetailsforLogin(dto);
+				List<RegisterDTO> list = dao.fetchDetailsforLogin(dto.getEmail());
 				for (RegisterDTO registerDTO : list) {
 					temp = emailForOTP.onSendOTP(registerDTO, tempPasswords);
+					dao.updateLoginFailedCount(registerDTO.getEmail(), 0);// resetting count to 0 for forgot password option
+					dao.updateLoginaccountStatus(registerDTO.getEmail(), false); // & status to false so that by resetting pswd user can again login																	 
 				}
-				temp=true;
-				
-				//logger.debug(tempPasswords);
-				//temp = emailForOTP.onSendOTP(dto, tempPasswords);
+				temp = true;
+
+				// logger.debug(tempPasswords);
+				// temp = emailForOTP.onSendOTP(dto, tempPasswords);
 				if (temp) {
 					message = "SUCCESS";
 					logger.debug("OTP email Sent");
@@ -201,16 +226,16 @@ public class RegisterServiceImpl implements RegisterService {
 					logger.debug("OTP email not Sent");
 					return message;
 				}
-			}else{
+			} else {
 				logger.debug("Passwords are mismatching update failed");
 
 			}
 		} catch (RepositoryException e) {
 			throw new ServiceException("Exception in service " + e.getMessage());
 
-	}catch (Exception e) {
-		throw new ServiceException("Exception in service " + e.getMessage());
-	}
+		} catch (Exception e) {
+			throw new ServiceException("Exception in service " + e.getMessage());
+		}
 		return message;
 	}
 
@@ -266,9 +291,10 @@ public class RegisterServiceImpl implements RegisterService {
 		return message;
 	}
 
-	/*@Override
-	public RegisterDTO getUserByEmail(String email) {
+	/*
+	 * @Override public RegisterDTO getUserByEmail(String email) {
+	 * 
+	 * return dao.getUserByEmail(email); }
+	 */
 
-		return dao.getUserByEmail(email);
-	}*/
 }
