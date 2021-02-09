@@ -17,6 +17,7 @@ import com.account.module.controller.RegistrationController;
 import com.account.module.dto.LoginDTO;
 import com.account.module.dto.RegisterDTO;
 import com.account.module.dto.ResetDTO;
+import com.account.module.dto.UpdateDTO;
 import com.account.module.exceptions.RepositoryException;
 
 import lombok.ToString;
@@ -258,16 +259,18 @@ public class RegisterDAOImpl implements RegisterDAO {
 	}
 
 
-	/*@Override
-	public int updateCountOnCorrectLogin(String email) throws RepositoryException {
+	@Override
+	public void updateNames(UpdateDTO dto) throws RepositoryException {
 		Session session = null;
 		Transaction transaction = null;
 		int check=0;
 		try {
 			session = sessionFactory.openSession();
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("update RegisterDTO reg set reg.count=ct where reg.email=:ml");
-			query.setParameter("ml", email);
+			Query query = session.createQuery("update RegisterDTO reg set reg.firstName=:fn, reg.lastName=:ln where reg.email=:ml");
+			query.setParameter("fn", dto.getFirstName());
+			query.setParameter("ln", dto.getLastName());
+			query.setParameter("ml",dto.getEmail());
 			check=query.executeUpdate();
 			logger.debug(check);
 			transaction.commit();
@@ -284,52 +287,10 @@ public class RegisterDAOImpl implements RegisterDAO {
 			if (session != null)
 				session.close();
 		}
-		return 0;
-	}*/
-
-
-/*	@Override
-	public boolean updateAccountStatusToLocked(LoginDTO loginDTO) throws RepositoryException {
-		Session session = null;
-		Transaction transaction = null;
-		int check = 0;
-		try {
-			session = sessionFactory.openSession();
-			transaction = session.beginTransaction();
-			Query query = session.createQuery("update RegisterDTO reg set reg.status=:sts where reg.email=:ml");
-			query.setParameter("sts", true);
-			query.setParameter("ml", loginDTO.getEmail());
-			check = query.executeUpdate();
-			transaction.commit();
-			logger.debug(check);
-		} catch (HibernateException e) {
-			if (transaction != null) {
-				transaction.rollback();
-				throw new RepositoryException(e.getMessage());
-			}
-		} catch (Exception e) {
-			if (transaction != null)
-				transaction.rollback();
-			throw new RepositoryException(e.getMessage());
-		} finally {
-			if (session != null)
-				session.close();
 		}
 
-		return false;
-	}*/
 
-	/*@Override
-	public RegisterDTO getUserByEmail(String email) {
-		Session session = null;
-		try {
-			session = sessionFactory.openSession();
-			Query query = session.createQuery("select reg from RegisterDTO reg where reg.email=:eml");
-			query.setParameter("eml", email);
-			return (RegisterDTO) query.uniqueResult();
-		}catch(HibernateException e){
-		e.printStackTrace();	
-		}
-		return null;
-	}*/
+	
+
+	
 }

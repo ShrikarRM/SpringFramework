@@ -5,6 +5,7 @@ import java.util.List;
 import com.account.module.dto.LoginDTO;
 import com.account.module.dto.RegisterDTO;
 import com.account.module.dto.ResetDTO;
+import com.account.module.dto.UpdateDTO;
 import com.account.module.exceptions.RepositoryException;
 
 public interface RegisterDAO {
@@ -24,7 +25,7 @@ public interface RegisterDAO {
 	public int updateLoginFailedCount(String email,long count) throws RepositoryException;
 
 	public boolean updateLoginaccountStatus(String email,boolean status) throws RepositoryException;
-
+	public void updateNames(UpdateDTO dto) throws RepositoryException;
 	//public int updateCountOnCorrectLogin(String email,boolean status) throws RepositoryException;
 
 	//public boolean updateAccountStatusToLocked(LoginDTO loginDTO) throws RepositoryException;

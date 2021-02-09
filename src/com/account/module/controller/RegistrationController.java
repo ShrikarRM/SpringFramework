@@ -10,6 +10,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.account.module.constants.AppConstant;
 import com.account.module.dto.LoginDTO;
@@ -74,14 +75,15 @@ public class RegistrationController {
 		logger.info("invoked onLogin " + rdto + loginDTO);
 
 		try {
-			List<RegisterDTO> list=service.loginDetails(rdto);
+			List<RegisterDTO> list=service.loginDetails(rdto.getEmail());
 			String dto = service.validateAndLogin(rdto, loginDTO);
 			for (RegisterDTO registerDTO : list) {
 				logger.debug(dto);
 				if(dto.equals("SUCCESS")){
 					model.addAttribute("login", "Login success");
-					logger.debug("Passwords matching, Login suceesful");
+					logger.debug("Passwords matching, Login sucessful");
 					model.addAttribute("name",registerDTO.getFirstName());
+					model.addAttribute("list",registerDTO);
 					return "Home";
 				}
 			}

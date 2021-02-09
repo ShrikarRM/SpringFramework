@@ -9,8 +9,8 @@
 <import resource="datasource.xml" />
 	<context:component-scan base-package="com.account"></context:component-scan>
 <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="username" value="ur mailID"></property>
-		<property name="password" value="....."></property>
+		<property name="username" value="shrikar.r.mutalik@gmail.com"></property>
+		<property name="password" value="1ds13mde17"></property>
 		<property name="port" value="587"></property>
 		<property name="host" value="smtp.gmail.com"></property>
 		<property name="javaMailProperties">

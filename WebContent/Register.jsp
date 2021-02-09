@@ -43,7 +43,7 @@
 				<div class="col-sm-6">
 					<input type="text" class="form-control mt-3"
 						placeholder="Enter First Name" name="firstName">
-						 <span id="err_fname" class="text-danger" text-weight="bold"></span>
+						 <span id="err_fname" class="text-danger font-weight-bold"></span>
 				</div>
 			</div>
 
